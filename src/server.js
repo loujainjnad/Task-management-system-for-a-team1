@@ -15,7 +15,7 @@ const server = http.createServer(app);
 // Initialize Socket.IO for real-time notifications
 const io = new Server(server, {
   cors: {
-    origin: process.env.ALLOWED_ORIGINS?.split(',') || ['http://localhost:3000'],
+    origin: process.env.ALLOWED_ORIGINS?.split(',') || ['http://localhost:5000'],
     methods: ['GET', 'POST'],
   },
 });
@@ -40,7 +40,7 @@ io.on('connection', (socket) => {
 global.io = io;
 
 // Get port from environment or use default
-const PORT = process.env.PORT || 3000;
+const PORT = process.env.PORT || 5000;
 
 // Start server
 server.listen(PORT, () => {

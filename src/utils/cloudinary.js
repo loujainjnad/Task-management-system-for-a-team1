@@ -1,10 +1,23 @@
-const cloudinary = require('cloudinary').v2;
+let cloudinary = null;
+
+// Try to load cloudinary if available (optional dependency)
+try {
+  cloudinary = require('cloudinary').v2;
+} catch (error) {
+  // Cloudinary package not installed - it's optional
+  cloudinary = null;
+}
 
 /**
  * Configure Cloudinary
  * إعداد Cloudinary
  */
 const configureCloudinary = () => {
+  if (!cloudinary) {
+    console.log('Cloudinary not configured - package not installed');
+    return false;
+  }
+
   if (
     process.env.CLOUDINARY_CLOUD_NAME &&
     process.env.CLOUDINARY_API_KEY &&
@@ -29,6 +42,9 @@ const configureCloudinary = () => {
  */
 const uploadImage = async (filePath, folder = 'taskman') => {
   try {
+    if (!cloudinary) {
+      throw new Error('Cloudinary package not installed');
+    }
     if (!configureCloudinary()) {
       throw new Error('Cloudinary غير مُعد');
     }
@@ -60,7 +76,7 @@ const uploadImage = async (filePath, folder = 'taskman') => {
  */
 const deleteImage = async (publicId) => {
   try {
-    if (!configureCloudinary()) {
+    if (!cloudinary || !configureCloudinary()) {
       return false;
     }
 
