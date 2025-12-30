@@ -15,7 +15,7 @@ const generateResetToken = () => {
     .digest('hex');
 
   // تاريخ انتهاء الصلاحية (افتراضي: ساعة واحدة)
-  const resetTokenExpire = Date.now() + (process.env.RESET_TOKEN_EXPIRE || 3600000);
+  const resetTokenExpire = Date.now() + (process.env.EXPIRE_ACCESS_TOKEN || 3600000);
 
   return {
     resetToken,        // الرمز الأصلي (يُرسل للمستخدم)

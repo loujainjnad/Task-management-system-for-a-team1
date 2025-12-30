@@ -6,12 +6,15 @@ const { errorHandler, notFound } = require('./middleware/error.middleware');
 const { generalLimiter } = require('../config/rateLimit.config');
 const corsOptions = require('../config/cors.config');
 const { configureCloudinary } = require('./utils/cloudinary');
+const cookieParser = require('cookie-parser')
 
 // Load environment variables
 dotenv.config();
 
 // Initialize Express app
 const app = express();
+
+app.use(cookieParser())
 
 // Security middleware
 app.use(helmet());
