@@ -30,6 +30,12 @@ const projectSchema = new mongoose.Schema(
       ref: 'User',
       required: [true, 'المدير مطلوب'],
     },
+    members: [{
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'User',
+      index: true,
+    }],
+  
     status: {
       type: String,
       enum: ['active', 'completed', 'cancelled', 'on_hold'],
@@ -51,6 +57,8 @@ const projectSchema = new mongoose.Schema(
 projectSchema.index({ manager: 1 });
 projectSchema.index({ status: 1 });
 projectSchema.index({ startDate: 1, endDate: 1 });
+projectSchema.index({ members: 1 });
+
 
 // Virtual لحساب عدد المهام
 projectSchema.virtual('tasks', {
