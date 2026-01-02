@@ -1,38 +1,66 @@
-const jwt = require('jsonwebtoken');
 
-/**
- * Generate JWT Token
- * إنشاء رمز JWT للمستخدم
- */
-const generateToken = (userId, role) => {
-  return jwt.sign(
-    { 
-      userId, 
-      role 
-    },
-    process.env.JWT_SECRET,
-    {
-      expiresIn: process.env.JWT_EXPIRE || '7d',
+require("dotenv").config();
+const jwt = require("jsonwebtoken");
+
+class TokenService {
+    genrateAccessToken(payload) {
+        return jwt.sign(
+            {
+                ...payload,
+                type: "access"
+            },
+            process.env.SECRET_ACCESS_TOKEN_KEY,
+            {
+                expiresIn: process.env.EXPIRE_ACCESS_TOKEN,
+            }
+        );
     }
-  );
-};
 
-/**
- * Generate Refresh Token (optional)
- * إنشاء رمز تحديث (اختياري)
- */
-const generateRefreshToken = (userId) => {
-  return jwt.sign(
-    { userId },
-    process.env.JWT_SECRET,
-    {
-      expiresIn: '30d',
+    genrateRefreshToken(payload) {
+        return jwt.sign(
+            {
+                ...payload,
+                type: "refresh"
+            },
+            process.env.SECRET_REFRESH_TOKEN_KEY,
+            {
+                expiresIn: process.env.EXPIRE_REFRESH_TOKEN,
+            }
+        );
     }
-  );
-};
 
-module.exports = {
-  generateToken,
-  generateRefreshToken,
-};
+    verifyAccessToken(token) {
+        try {
+            return jwt.verify(token, process.env.SECRET_ACCESS_TOKEN_KEY)
+        } catch (error) {
+            if(error.name === "TokenExpiredError") {
+                throw new Error("Access Token Expired");
+            }
+
+            if(error.name === "JsonWebTokenError") {
+                throw new Error("Invalid Access Token");
+            }
+
+            throw new Error("Token Verification Faild")
+        }
+    }
+
+    verifyRefreshToken(token) {
+        try {
+            return jwt.verify(token, process.env.SECRET_REFRESH_TOKEN_KEY)
+        } catch (error) {
+            if(error.name === "TokenExpiredError") {
+                throw new Error("Refresh Token Expired");
+            }
+
+            if(error.name === "JsonWebTokenError") {
+                throw new Error("Invalid Refresh Token");
+            }
+
+            throw new Error("Token Verification Faild")
+        }
+    }
+}
+
+module.exports = new TokenService();
 

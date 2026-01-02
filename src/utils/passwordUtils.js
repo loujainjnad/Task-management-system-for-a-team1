@@ -1,5 +1,4 @@
 const argon2 = require('argon2');
-
 /**
  * Hash Password using Argon2
  * تشفير كلمة المرور باستخدام Argon2
@@ -11,10 +10,11 @@ const hashPassword = async (password) => {
       memoryCost: 65536, // 64 MB
       timeCost: 3,       // 3 iterations
       parallelism: 4,    // 4 threads
+      hashLength: 32
     });
     return hashedPassword;
   } catch (error) {
-    throw new Error('خطأ في تشفير كلمة المرور');
+    throw new Error(error.message);
   }
 };
 
@@ -22,12 +22,12 @@ const hashPassword = async (password) => {
  * Verify Password
  * التحقق من كلمة المرور
  */
-const verifyPassword = async (hashedPassword, plainPassword) => {
+const verifyPassword = async (plainPassword, hashedPassword) => {
   try {
     const isValid = await argon2.verify(hashedPassword, plainPassword);
     return isValid;
   } catch (error) {
-    return false;
+    throw new Error(error.message);
   }
 };
 
