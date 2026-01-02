@@ -2,7 +2,7 @@
   "name": "task-management-system",
   "version": "1.0.0",
   "description": "نظام إدارة مهام فريق العمل - Task Management System for Team",
-  "main": "src/server.js",
+  "main": "src/app.js",
   "scripts": {
     "start": "node src/server.js",
     "dev": "nodemon src/server.js",
